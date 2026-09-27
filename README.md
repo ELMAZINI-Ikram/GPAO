@@ -1,4 +1,4 @@
-# GPAO V4 — Gestion de Production Assistée par Ordinateur
+# GPAO : Gestion de Production Assistée par Ordinateur
 
 **Application web de pilotage de la production pour un atelier électromécanique** : du programme directeur de production au calcul des besoins (MRP), en passant par la charge machine, l'ordonnancement des ordres de fabrication, la gestion des stocks et la maintenance.
 
