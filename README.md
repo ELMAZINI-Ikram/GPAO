@@ -150,5 +150,5 @@ Le moteur MRP est conçu dans une optique pédagogique et opérationnelle ; il n
 Projet réalisé dans le cadre du module de GPAO par trois élèves ingénieur(e)s en Transformation Digitale Industrielle — ENSA Béni Mellal :
 
 - **Ikram ELMAZINI** — [@ELMAZINI-Ikram](https://github.com/ELMAZINI-Ikram)
-- **[Prénom NOM]** — [@pseudo-github](https://github.com/pseudo-github)
-- **[Prénom NOM]** — [@pseudo-github](https://github.com/pseudo-github)
+- **Loubna ECH-CHOKHMANY** — [@LOUBNA-ECH-CHOKHMANY](https://github.com/pseudo-github)
+- **N.PHILIPPE** — [@N.PHILIPPE](https://github.com/pseudo-github)
