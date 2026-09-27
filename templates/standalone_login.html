@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion - GPAO V4</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&family=Open+Sans:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Open Sans', 'Roboto', sans-serif;
+    }
+    
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      25% { transform: translateY(-15px) rotate(5deg); }
+      50% { transform: translateY(-25px) rotate(0deg); }
+      75% { transform: translateY(-15px) rotate(-5deg); }
+    }
+    
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(50px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    
+    @keyframes slideInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    @keyframes scrollText {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+    
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+    
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    @keyframes bounce {
+      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+      40% { transform: translateY(-20px); }
+      60% { transform: translateY(-10px); }
+    }
+    
+    body {
+      background: linear-gradient(-45deg, #667eea, #764ba2, #f093fb, #f5576c, #4facfe, #00f2fe);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Open Sans', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    .login-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: none;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      border-radius: 25px;
+      max-width: 520px;
+      width: 90%;
+      animation: slideIn 0.8s ease-out;
+      backdrop-filter: blur(10px);
+    }
+    
+    .login-card:hover {
+      box-shadow: 0 30px 100px rgba(0, 0, 0, 0.5);
+      transform: translateY(-5px);
+      transition: all 0.4s ease;
+    }
+    
+    .logo-icon {
+      font-size: 6rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: float 4s ease-in-out infinite;
+      display: inline-block;
+    }
+    
+    .logo-icon:hover {
+      animation: bounce 1s ease;
+    }
+    
+    .scrolling-text-container {
+      background: linear-gradient(90deg, #667eea, #764ba2, #f093fb);
+      background-size: 200% 100%;
+      animation: gradientBG 10s ease infinite;
+      color: white;
+      padding: 15px 0;
+      overflow: hidden;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .scrolling-text {
+      white-space: nowrap;
+      animation: scrollText 25s linear infinite;
+      font-weight: 600;
+      font-size: 1.2rem;
+      font-family: 'Roboto', sans-serif;
+      letter-spacing: 1px;
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      padding: 14px 28px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.4s;
+      border-radius: 12px;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+    }
+    
+    .btn-primary:active {
+      transform: translateY(0) scale(0.98);
+    }
+    
+    .form-control {
+      border-radius: 12px;
+      padding: 14px 18px;
+      border: 2px solid #e0e0e0;
+      transition: all 0.3s;
+      font-size: 1rem;
+      font-family: 'Open Sans', sans-serif;
+    }
+    
+    .form-control:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+      transform: scale(1.02);
+    }
+    
+    .form-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #333;
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    .input-group-text {
+      border-radius: 12px 0 0 12px;
+      border: 2px solid #e0e0e0;
+      border-right: none;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      color: #667eea;
+      font-size: 1.2rem;
+    }
+    
+    .input-group .form-control {
+      border-radius: 0 12px 12px 0;
+      border-left: none;
+    }
+    
+    .account-info {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 18px;
+      border-left: 5px solid #667eea;
+      padding: 25px;
+      margin-top: 30px;
+      animation: slideInUp 1s ease-out 0.3s both;
+    }
+    
+    .account-info h6 {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 800;
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+      font-family: 'Roboto', sans-serif;
+    }
+    
+    .account-item {
+      padding: 10px 0;
+      border-bottom: 1px solid #dee2e6;
+      animation: fadeIn 0.5s ease-out both;
+      transition: all 0.3s;
+    }
+    
+    .account-item:hover {
+      padding-left: 10px;
+      background: rgba(102, 126, 234, 0.05);
+      border-radius: 8px;
+    }
+    
+    .account-item:nth-child(2) { animation-delay: 0.1s; }
+    .account-item:nth-child(3) { animation-delay: 0.2s; }
+    .account-item:nth-child(4) { animation-delay: 0.3s; }
+    .account-item:nth-child(5) { animation-delay: 0.4s; }
+    .account-item:nth-child(6) { animation-delay: 0.5s; }
+    
+    .account-item:last-child {
+      border-bottom: none;
+    }
+    
+    .account-item small {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    
+    .account-item strong {
+      color: #667eea;
+      font-weight: 700;
+    }
+    
+    h2 {
+      font-family: 'Roboto', sans-serif;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+    
+    p.text-muted {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+    
+    .card-body {
+      animation: slideIn 1s ease-out;
+    }
+    
+    .mb-4 {
+      animation: slideInLeft 0.8s ease-out both;
+    }
+    
+    .mb-4:nth-child(2) {
+      animation: slideInRight 0.8s ease-out both;
+    }
+    
+    .mb-4:nth-child(3) {
+      animation: slideInLeft 0.8s ease-out both;
+    }
+  </style>
+</head>
+<body>
+  <div class="scrolling-text-container">
+    <div class="scrolling-text">
+      🏭 Bienvenue sur GPAO V4 - Système de Gestion de Production Assistée par Ordinateur • Optimisez votre production • Gérez vos stocks • Suivez vos commandes • Contrôlez la qualité • Planifiez la maintenance • Améliorez vos performances 🚀
+    </div>
+  </div>
+
+  <div class="login-card">
+    <div class="card-body p-5">
+      <div class="text-center mb-4">
+        <i class="bi bi-gear-fill logo-icon"></i>
+        <h2 class="mt-3">GPAO V4</h2>
+        <p class="text-muted">Gestion de Production Assistée par Ordinateur</p>
+      </div>
+      
+      <form method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+        <div class="mb-4">
+          <label for="id_username" class="form-label">Nom d'utilisateur</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-person"></i></span>
+            <input type="text" class="form-control" id="id_username" name="username" required placeholder="Entrez votre nom d'utilisateur">
+          </div>
+        </div>
+        <div class="mb-4">
+          <label for="id_password" class="form-label">Mot de passe</label>
+          <div class="input-group">
+            <span class="input-group-text"><i class="bi bi-lock"></i></span>
+            <input type="password" class="form-control" id="id_password" name="password" required placeholder="Entrez votre mot de passe">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-box-arrow-in-right"></i> Se connecter
+        </button>
+      </form>
+      
+      <div class="account-info">
+        <h6><i class="bi bi-info-circle"></i> Comptes disponibles</h6>
+        <div class="account-item">
+          <small><strong>Admin:</strong> admin / admin123</small>
+        </div>
+        <div class="account-item">
+          <small><strong>Opérateur:</strong> operateur / operateur123</small>
+        </div>
+        <div class="account-item">
+          <small><strong>Magasinier:</strong> magasinier / magasinier123</small>
+        </div>
+        <div class="account-item">
+          <small><strong>Acheteur:</strong> acheteur / acheteur123</small>
+        </div>
+        <div class="account-item">
+          <small><strong>Directeur:</strong> directeur / directeur123</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

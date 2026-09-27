@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block page_title %}Nouveau certificat de conformité{% endblock %}
+{% block content %}
+<form method="post" class="card card-kpi p-4">
+  {% csrf_token %}
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.manufacturing_order.label_tag }} {{ form.manufacturing_order }}</div>
+    <div class="col-md-6">{{ form.certificate_number.label_tag }} {{ form.certificate_number }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.issue_date.label_tag }} {{ form.issue_date }}</div>
+  </div>
+  <div class="mb-3">{{ form.notes.label_tag }} {{ form.notes }}</div>
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+  <a href="{% url 'certificate_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block page_title %}Certificats de conformité{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <a href="{% url 'certificate_create' %}" class="btn btn-primary">Nouveau certificat</a>
+</div>
+<div class="card card-kpi p-3">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Numéro</th>
+        <th>OF</th>
+        <th>Article</th>
+        <th>Date émission</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cert in certificates %}
+      <tr>
+        <td>{{ cert.certificate_number }}</td>
+        <td>{{ cert.manufacturing_order.number }}</td>
+        <td>{{ cert.manufacturing_order.article.code }}</td>
+        <td>{{ cert.issue_date }}</td>
+        <td>{{ cert.notes }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">Aucun certificat</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

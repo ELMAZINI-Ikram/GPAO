@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block page_title %}Prix de revient{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <a href="{% url 'production_cost_create' %}" class="btn btn-primary">Nouveau coût</a>
+</div>
+<div class="card card-kpi p-3">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>OF</th>
+        <th>Article</th>
+        <th>Coût matière</th>
+        <th>Coût MO</th>
+        <th>Coût machine</th>
+        <th>Coût total</th>
+        <th>Prix vente</th>
+        <th>Marge</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for cost in costs %}
+      <tr>
+        <td>{{ cost.manufacturing_order.number }}</td>
+        <td>{{ cost.manufacturing_order.article.code }}</td>
+        <td>{{ cost.material_cost }} Dhs</td>
+        <td>{{ cost.labor_cost }} Dhs</td>
+        <td>{{ cost.machine_cost }} Dhs</td>
+        <td><strong>{{ cost.total_cost }} Dhs</strong></td>
+        <td>{{ cost.selling_price }} Dhs</td>
+        <td{% if cost.gross_margin > 0 %} class="text-success"{% else %} class="text-danger"{% endif %}>{{ cost.gross_margin }} Dhs</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8">Aucun coût enregistré</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

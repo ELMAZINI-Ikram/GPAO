@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block page_title %}Nouvelle facture fournisseur{% endblock %}
+{% block content %}
+<form method="post" class="card card-kpi p-4">
+  {% csrf_token %}
+  <div class="row mb-3">
+    <div class="col-md-4">{{ form.supplier_order.label_tag }} {{ form.supplier_order }}</div>
+    <div class="col-md-4">{{ form.invoice_number.label_tag }} {{ form.invoice_number }}</div>
+    <div class="col-md-4">{{ form.amount.label_tag }} {{ form.amount }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.due_date.label_tag }} {{ form.due_date }}</div>
+    <div class="col-md-6">{{ form.status.label_tag }} {{ form.status }}</div>
+  </div>
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+  <a href="{% url 'supplier_invoice_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block page_title %}Nouvelle non-conformité{% endblock %}
+{% block content %}
+<form method="post" class="card card-kpi p-4">
+  {% csrf_token %}
+  <div class="mb-3">{{ form.quality_check.label_tag }} {{ form.quality_check }}</div>
+  <div class="mb-3">{{ form.description.label_tag }} {{ form.description }}</div>
+  <div class="mb-3">{{ form.corrective_action.label_tag }} {{ form.corrective_action }}</div>
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.resolved.label_tag }} {{ form.resolved }}</div>
+    <div class="col-md-6">{{ form.resolved_on.label_tag }} {{ form.resolved_on }}</div>
+  </div>
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+  <a href="{% url 'non_conformity_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

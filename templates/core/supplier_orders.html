@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block page_title %}Commandes fournisseurs{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <a href="{% url 'supplier_order_create' %}" class="btn btn-primary">Nouvelle commande</a>
+</div>
+<div class="card card-kpi p-3">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Numéro</th>
+        <th>Fournisseur</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for order in orders %}
+      <tr>
+        <td>{{ order.number }}</td>
+        <td>{{ order.supplier.name }}</td>
+        <td>{{ order.order_date }}</td>
+        <td>
+          {% if order.status == 'RECEIVED' %}
+            <span class="badge bg-success">{{ order.get_status_display }}</span>
+          {% elif order.status == 'SENT' %}
+            <span class="badge bg-warning">{{ order.get_status_display }}</span>
+          {% else %}
+            <span class="badge bg-secondary">{{ order.get_status_display }}</span>
+          {% endif %}
+        </td>
+        <td>
+          <a href="/admin/core/supplierorder/{{ order.id }}/change/" class="btn btn-sm btn-outline-primary">Modifier</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5">Aucune commande</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

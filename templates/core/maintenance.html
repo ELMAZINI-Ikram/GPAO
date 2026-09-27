@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block page_title %}Maintenance légère{% endblock %}
+{% block content %}
+<a class="btn btn-primary mb-3" href="/maintenance/new/">Nouveau ticket</a>
+<div class="card card-kpi"><div class="card-body table-responsive"><table class="table"><thead><tr><th>Machine</th><th>Titre</th><th>Statut</th><th>Ouverture</th><th>Résolution</th></tr></thead><tbody>
+{% for t in tickets %}<tr><td>{{ t.machine.name }}</td><td>{{ t.title }}</td><td>{{ t.get_status_display }}</td><td>{{ t.opened_on|date:'d/m/Y' }}</td><td>{{ t.resolved_on|date:'d/m/Y' }}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endblock %}

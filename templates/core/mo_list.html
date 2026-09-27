@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block page_title %}Ordres de fabrication et de travail{% endblock %}
+{% block content %}
+{% for mo in mos %}
+<div class="card card-kpi mb-4"><div class="card-body">
+<div class="d-flex justify-content-between"><div><h5>{{ mo.number }} - {{ mo.article.code }}</h5><div class="text-muted">Qté {{ mo.quantity }} | Début {{ mo.planned_start|date:'d/m/Y' }} | Fin {{ mo.due_date|date:'d/m/Y' }} | {{ mo.get_status_display }}</div></div></div>
+<table class="table small mt-3"><thead><tr><th>Opération</th><th>Machine</th><th>Statut</th><th>Action</th></tr></thead><tbody>
+{% for wo in mo.work_orders.all %}
+<tr><td>{{ wo.operation.sequence }} - {{ wo.operation.label }}</td><td>{{ wo.machine.name }}</td><td>{{ wo.get_status_display }}</td><td class="d-flex gap-1"><a class="btn btn-sm btn-outline-primary" href="/workorders/{{ wo.id }}/IN_PROGRESS/">Démarrer</a><a class="btn btn-sm btn-outline-warning" href="/workorders/{{ wo.id }}/PAUSED/">Pause</a><a class="btn btn-sm btn-outline-success" href="/workorders/{{ wo.id }}/DONE/">Terminer</a></td></tr>
+{% endfor %}
+</tbody></table>
+</div></div>
+{% empty %}
+<div class="alert alert-secondary">Aucun OF. Utilisez “Générer les OF”.</div>
+{% endfor %}
+{% endblock %}

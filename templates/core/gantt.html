@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+{% block page_title %}Gantt interactif - OF{% endblock %}
+{% block content %}
+<style>
+  .gantt-container { overflow-x: auto; }
+  .gantt-row { transition: all 0.3s; cursor: pointer; }
+  .gantt-row:hover { background: rgba(102,126,234,0.1); }
+  .progress-bar-animated { transition: width 0.5s ease; }
+  .status-badge { font-size: 0.85rem; padding: 5px 10px; }
+  .timeline-bar { height: 30px; border-radius: 4px; transition: all 0.3s; }
+  .timeline-bar:hover { transform: scaleY(1.1); box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4><i class="bi bi-calendar-range"></i> Diagramme de Gantt Interactif</h4>
+  <div class="d-flex gap-2">
+    <select class="form-select form-select-sm" style="width: 150px;" id="filterStatus">
+      <option value="">Tous les statuts</option>
+      <option value="PENDING">En attente</option>
+      <option value="IN_PROGRESS">En cours</option>
+      <option value="DONE">Terminé</option>
+    </select>
+    <button class="btn btn-sm btn-outline-primary" onclick="refreshGantt()"><i class="bi bi-arrow-clockwise"></i> Actualiser</button>
+  </div>
+</div>
+
+<div class="card card-kpi">
+  <div class="card-body">
+    <div class="gantt-container">
+      <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th style="width: 120px;">OF</th>
+            <th style="width: 150px;">Article</th>
+            <th style="width: 130px;">Début</th>
+            <th style="width: 130px;">Fin</th>
+            <th style="width: 120px;">Statut</th>
+            <th style="width: 200px;">Progression</th>
+            <th>Timeline</th>
+          </tr>
+        </thead>
+        <tbody id="ganttBody">
+          {% for mo in mos %}
+          <tr class="gantt-row" data-status="{{ mo.status }}">
+            <td><strong>{{ mo.number }}</strong></td>
+            <td>{{ mo.article.code }}</td>
+            <td>{{ mo.planned_start|default:"-"|date:"d/m/Y" }}</td>
+            <td>{{ mo.due_date|date:"d/m/Y" }}</td>
+            <td>
+              {% if mo.status == 'DONE' %}
+                <span class="badge bg-success status-badge">{{ mo.get_status_display }}</span>
+              {% elif mo.status == 'IN_PROGRESS' %}
+                <span class="badge bg-warning status-badge">{{ mo.get_status_display }}</span>
+              {% else %}
+                <span class="badge bg-secondary status-badge">{{ mo.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="progress" style="height: 25px;">
+                {% if mo.status == 'DONE' %}
+                <div class="progress-bar bg-success progress-bar-animated" role="progressbar" style="width: 100%">100%</div>
+                {% elif mo.status == 'IN_PROGRESS' %}
+                <div class="progress-bar bg-warning progress-bar-animated" role="progressbar" style="width: 50%">50%</div>
+                {% else %}
+                <div class="progress-bar bg-secondary progress-bar-animated" role="progressbar" style="width: 5%">0%</div>
+                {% endif %}
+              </div>
+            </td>
+            <td>
+              <div class="timeline-bar d-flex align-items-center justify-content-center text-white" 
+                   data-status="{{ mo.status }}"
+                   style="width: 100%; background: linear-gradient(90deg, #6c757d, #495057);">
+                <small>{{ mo.get_status_display }}</small>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" class="text-center">Aucun OF planifié</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  function refreshGantt() {
+    location.reload();
+  }
+  
+  document.getElementById('filterStatus').addEventListener('change', function() {
+    const status = this.value;
+    const rows = document.querySelectorAll('.gantt-row');
+    rows.forEach(row => {
+      if (status === '' || row.getAttribute('data-status') === status) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  });
+  
+  document.addEventListener('DOMContentLoaded', function() {
+    const timelineBars = document.querySelectorAll('.timeline-bar');
+    timelineBars.forEach(bar => {
+      const status = bar.getAttribute('data-status');
+      if (status === 'DONE') {
+        bar.style.background = 'linear-gradient(90deg, #28a745, #20c997)';
+      } else if (status === 'IN_PROGRESS') {
+        bar.style.background = 'linear-gradient(90deg, #ffc107, #fd7e14)';
+      } else {
+        bar.style.background = 'linear-gradient(90deg, #6c757d, #495057)';
+      }
+    });
+  });
+</script>
+{% endblock %}

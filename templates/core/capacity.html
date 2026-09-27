@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block page_title %}Charge / capacité machine{% endblock %}
+{% block content %}
+{% for row in report %}
+<div class="card card-kpi mb-4"><div class="card-body table-responsive">
+<h5>{{ row.machine.code }} - {{ row.machine.name }} <span class="badge {% if row.machine.status == 'AVAILABLE' %}bg-success{% else %}bg-danger{% endif %}">{{ row.machine.get_status_display }}</span></h5>
+<table class="table table-bordered small"><thead><tr><th>Semaine</th><th>Charge (h)</th><th>Capacité (h)</th><th>Utilisation</th><th>État</th></tr></thead><tbody>
+{% for w in row.weeks %}<tr class="{% if w.overload %}table-danger{% endif %}"><td>{{ w.week|date:'d/m/Y' }}</td><td>{{ w.load }}</td><td>{{ w.capacity }}</td><td>{{ w.utilization }}%</td><td>{% if w.overload %}Surcharge{% else %}OK{% endif %}</td></tr>{% endfor %}
+</tbody></table>
+</div></div>
+{% endfor %}
+{% endblock %}

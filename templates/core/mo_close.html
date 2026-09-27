@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block page_title %}Clôturer OF {{ mo.number }}{% endblock %}
+{% block content %}
+<form method="post" class="card card-kpi p-4">
+  {% csrf_token %}
+  <div class="mb-3">
+    <p><strong>Article:</strong> {{ mo.article.code }} - {{ mo.article.designation }}</p>
+    <p><strong>Quantité planifiée:</strong> {{ mo.quantity }}</p>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.good_qty.label_tag }} {{ form.good_qty }}</div>
+    <div class="col-md-6">{{ form.scrap_qty.label_tag }} {{ form.scrap_qty }}</div>
+  </div>
+  <button type="submit" class="btn btn-success">Clôturer l'OF</button>
+  <a href="{% url 'mo_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

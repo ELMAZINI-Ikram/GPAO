@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block page_title %}Graphique des décalages{% endblock %}
+{% block content %}
+<div class="card card-kpi"><div class="card-body table-responsive">
+<table class="table table-bordered small">
+<thead><tr><th>Article</th><th>Lancements planifiés</th><th>Réceptions planifiées</th></tr></thead>
+<tbody>
+{% for row in rows %}
+<tr>
+<td>{{ row.article.code }}</td>
+<td>{% for r in row.launches %}<span class="badge text-bg-primary me-1">{{ r.week_start|date:'d/m' }} : {{ r.planned_release }}</span>{% empty %}-{% endfor %}</td>
+<td>{% for r in row.receipts %}<span class="badge text-bg-secondary me-1">{{ r.week_start|date:'d/m' }} : {{ r.planned_receipt }}</span>{% empty %}-{% endfor %}</td>
+</tr>
+{% endfor %}
+</tbody></table>
+</div></div>
+{% endblock %}

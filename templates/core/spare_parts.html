@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block page_title %}Pièces de rechange{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <a href="{% url 'spare_part_create' %}" class="btn btn-primary">Nouvelle pièce</a>
+</div>
+<div class="card card-kpi p-3">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        <th>Article</th>
+        <th>Machine</th>
+        <th>Quantité</th>
+        <th>Min. quantité</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for part in spare_parts %}
+      <tr{% if part.quantity < part.min_quantity %} class="table-danger"{% endif %}>
+        <td>{{ part.article.code }} - {{ part.article.designation }}</td>
+        <td>{{ part.machine.code }} - {{ part.machine.name }}</td>
+        <td>{{ part.quantity }}</td>
+        <td>{{ part.min_quantity }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">Aucune pièce de rechange</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

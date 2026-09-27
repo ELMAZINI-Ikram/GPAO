@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% block page_title %}Planification de production{% endblock %}
+{% block content %}
+<style>
+  .stat-card { transition: all 0.3s; cursor: pointer; }
+  .stat-card:hover { transform: translateY(-5px); box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+  .machine-indicator { width: 15px; height: 15px; border-radius: 50%; display: inline-block; }
+  .machine-available { background: #28a745; }
+  .machine-busy { background: #ffc107; }
+  .machine-down { background: #dc3545; }
+  .planning-row { transition: all 0.3s; }
+  .planning-row:hover { background: rgba(102,126,234,0.05); }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h4><i class="bi bi-diagram-3"></i> Planification de production</h4>
+  <div class="d-flex gap-2">
+    <span class="badge bg-info">Semaine du {{ week_start|date:"d/m" }} au {{ week_end|date:"d/m" }}</span>
+  </div>
+</div>
+
+<!-- Statistics -->
+<div class="row g-3 mb-4">
+  <div class="col-md-3">
+    <div class="card card-kpi stat-card">
+      <div class="card-body">
+        <div class="text-muted">Total OF</div>
+        <div class="display-6">{{ total_mos }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-kpi stat-card">
+      <div class="card-body">
+        <div class="text-muted">OF Terminés</div>
+        <div class="display-6 text-success">{{ completed_mos }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-kpi stat-card">
+      <div class="card-body">
+        <div class="text-muted">OF En cours</div>
+        <div class="display-6 text-warning">{{ in_progress_mos }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card card-kpi stat-card">
+      <div class="card-body">
+        <div class="text-muted">OF Cette semaine</div>
+        <div class="display-6">{{ mos_week|length }}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Machine Capacity -->
+<div class="card card-kpi mb-4">
+  <div class="card-body">
+    <h5><i class="bi bi-cpu"></i> Capacité des machines</h5>
+    <div class="row g-3 mt-2">
+      {% for machine in machines %}
+      <div class="col-md-4">
+        <div class="card border">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+              <h6>{{ machine.name }}</h6>
+              <span class="machine-indicator {% if machine.status == 'AVAILABLE' %}machine-available{% elif machine.status == 'DOWN' %}machine-down{% else %}machine-busy{% endif %}"></span>
+            </div>
+            <small class="text-muted">
+              OF actifs: {{ machine.active_orders }}<br>
+              Statut: {{ machine.get_status_display }}
+            </small>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12"><p class="text-muted">Aucune machine configurée</p></div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Weekly Orders -->
+<div class="card card-kpi">
+  <div class="card-body">
+    <h5><i class="bi bi-calendar-week"></i> Ordres de fabrication de la semaine</h5>
+    <div class="table-responsive mt-3">
+      <table class="table table-hover">
+        <thead class="table-dark">
+          <tr>
+            <th>OF</th>
+            <th>Article</th>
+            <th>Date début</th>
+            <th>Date fin</th>
+            <th>Statut</th>
+            <th>Progression</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for mo in mos_week %}
+          <tr class="planning-row">
+            <td><strong>{{ mo.number }}</strong></td>
+            <td>{{ mo.article.code }} - {{ mo.article.designation }}</td>
+            <td>{{ mo.planned_start|default:"-"|date:"d/m/Y" }}</td>
+            <td>{{ mo.due_date|date:"d/m/Y" }}</td>
+            <td>
+              {% if mo.status == 'DONE' %}
+                <span class="badge bg-success">{{ mo.get_status_display }}</span>
+              {% elif mo.status == 'IN_PROGRESS' %}
+                <span class="badge bg-warning">{{ mo.get_status_display }}</span>
+              {% else %}
+                <span class="badge bg-secondary">{{ mo.get_status_display }}</span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="progress" style="height: 20px;">
+                {% if mo.status == 'DONE' %}
+                  <div class="progress-bar bg-success" style="width: 100%"></div>
+                {% elif mo.status == 'IN_PROGRESS' %}
+                  <div class="progress-bar bg-warning" style="width: 50%"></div>
+                {% else %}
+                  <div class="progress-bar bg-secondary" style="width: 10%"></div>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center">Aucun OF planifié cette semaine</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-refresh every 60 seconds
+  setInterval(function() {
+    location.reload();
+  }, 60000);
+</script>
+{% endblock %}

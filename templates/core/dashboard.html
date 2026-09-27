@@ -1,0 +1,287 @@
+{% extends 'base.html' %}
+{% block page_title %}Tableau de bord - Production en temps réel{% endblock %}
+{% block content %}
+<style>
+  .status-indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 8px;
+    animation: pulse 2s infinite;
+  }
+  .status-online { background: #28a745; }
+  .status-offline { background: #dc3545; }
+  .status-warning { background: #ffc107; }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  
+  .production-progress {
+    height: 8px;
+    border-radius: 4px;
+    background: #e9ecef;
+    overflow: hidden;
+  }
+  
+  .production-progress-bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+  }
+  
+  .machine-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+  
+  .machine-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  }
+  
+  .alert-blink {
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+</style>
+
+<!-- Real-time Production Status -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">CA du mois</div>
+            <div class="display-6">{{ monthly_revenue|floatformat:2 }} Dhs</div>
+          </div>
+          <i class="bi bi-cash-stack" style="font-size: 2rem; color: var(--primary-color);"></i>
+        </div>
+        <div class="production-progress mt-2">
+          <div class="production-progress-bar" data-width="{{ monthly_revenue|floatformat:0 }}" style="width: 0%; background: linear-gradient(90deg, #667eea, #764ba2);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">Taux de service</div>
+            <div class="display-6">{{ service_rate }}%</div>
+          </div>
+          <i class="bi bi-graph-up-arrow" style="font-size: 2rem; color: #28a745;"></i>
+        </div>
+        <div class="production-progress mt-2">
+          <div class="production-progress-bar" data-width="{{ service_rate }}" style="width: 0%; background: linear-gradient(90deg, #28a745, #20c997);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi" style="border-left: 4px solid #dc3545;">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">OF en retard</div>
+            <div class="display-6 text-danger">{{ late_mo }}</div>
+          </div>
+          <i class="bi bi-exclamation-triangle alert-blink" style="font-size: 2rem; color: #dc3545;"></i>
+        </div>
+        {% if late_mo > 0 %}
+        <small class="text-danger"><i class="bi bi-arrow-up"></i> Attention requise</small>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">Stock valorisé</div>
+            <div class="display-6">{{ total_stock_value|floatformat:2 }} Dhs</div>
+          </div>
+          <i class="bi bi-box-seam" style="font-size: 2rem; color: var(--primary-color);"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Machine Status Monitoring -->
+<div class="row g-3 mb-4">
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi machine-card">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">Machines en panne</div>
+            <div class="display-6 text-danger">{{ machine_down }}</div>
+          </div>
+          <i class="bi bi-tools" style="font-size: 2rem; color: #dc3545;"></i>
+        </div>
+        {% if machine_down > 0 %}
+        <small class="text-danger"><i class="bi bi-exclamation-circle"></i> Maintenance requise</small>
+        {% else %}
+        <small class="text-success"><i class="bi bi-check-circle"></i> Toutes opérationnelles</small>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">Taux de rebut</div>
+            <div class="display-6">{{ scrap_rate }}%</div>
+          </div>
+          <i class="bi bi-graph-down" style="font-size: 2rem; color: #ffc107;"></i>
+        </div>
+        <div class="production-progress mt-2">
+          <div class="production-progress-bar" data-width="{{ scrap_rate }}" style="width: 0%; background: linear-gradient(90deg, #ffc107, #fd7e14);"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">Commandes semaine</div>
+            <div class="display-6">{{ orders_this_week }}</div>
+          </div>
+          <i class="bi bi-cart3" style="font-size: 2rem; color: #17a2b8;"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-md-6 col-lg-3">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="text-muted">OF ouverts</div>
+            <div class="display-6">{{ open_mo }}</div>
+          </div>
+          <i class="bi bi-gear" style="font-size: 2rem; color: var(--primary-color);"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Production Alerts -->
+<div class="row g-3 mb-4">
+  <div class="col-12">
+    <div class="card card-kpi">
+      <div class="card-body">
+        <h5><i class="bi bi-bell"></i> Alertes de production en temps réel</h5>
+        <div class="row g-2 mt-3">
+          {% if late_mo > 0 %}
+          <div class="col-md-4">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              <strong><i class="bi bi-exclamation-triangle"></i> OF en retard:</strong> {{ late_mo }} ordres de fabrication nécessitent une attention immédiate
+            </div>
+          </div>
+          {% endif %}
+          {% if machine_down > 0 %}
+          <div class="col-md-4">
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+              <strong><i class="bi bi-tools"></i> Machines en panne:</strong> {{ machine_down }} machine(s) indisponible(s)
+            </div>
+          </div>
+          {% endif %}
+          {% if shortage %}
+          <div class="col-md-4">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+              <strong><i class="bi bi-box-seam"></i> Stock faible:</strong> {{ shortage|length }} article(s) en rupture potentielle
+            </div>
+          </div>
+          {% endif %}
+          {% if late_mo == 0 and machine_down == 0 %}
+          <div class="col-12">
+            <div class="alert alert-success" role="alert">
+              <i class="bi bi-check-circle"></i> Production normale - Aucune alerte en cours
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Articles en besoin net -->
+<div class="card card-kpi">
+  <div class="card-body">
+    <h5><i class="bi bi-box-arrow-in-down"></i> Articles en besoin net</h5>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Article</th>
+            <th>Besoin net total</th>
+            <th>Premier lancement conseillé</th>
+            <th>Priorité</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in shortage %}
+          <tr>
+            <td>{{ row.article.code }} - {{ row.article.designation }}</td>
+            <td><strong>{{ row.net_total }}</strong></td>
+            <td>{{ row.first_launch|date:'d/m/Y' }}</td>
+            <td>
+              {% if row.net_total > 100 %}
+                <span class="badge bg-danger">Haute</span>
+              {% elif row.net_total > 50 %}
+                <span class="badge bg-warning">Moyenne</span>
+              {% else %}
+                <span class="badge bg-success">Basse</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="/mrp/" class="btn btn-sm btn-primary"><i class="bi bi-eye"></i> Voir MRP</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5">Aucun manque détecté.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Animate progress bars on page load
+  document.addEventListener('DOMContentLoaded', function() {
+    const progressBars = document.querySelectorAll('.production-progress-bar');
+    progressBars.forEach(bar => {
+      const width = bar.getAttribute('data-width');
+      if (width) {
+        setTimeout(() => {
+          bar.style.width = width + '%';
+        }, 100);
+      }
+    });
+  });
+  
+  // Auto-refresh dashboard every 30 seconds for real-time updates
+  setInterval(function() {
+    location.reload();
+  }, 30000);
+</script>
+{% endblock %}

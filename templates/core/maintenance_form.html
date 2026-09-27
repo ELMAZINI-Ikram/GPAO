@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block page_title %}Nouveau ticket maintenance{% endblock %}
+{% block content %}
+<div class="card card-kpi"><div class="card-body"><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn btn-primary">Enregistrer</button></form></div></div>
+{% endblock %}

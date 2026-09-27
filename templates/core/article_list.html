@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block page_title %}Articles{% endblock %}
+{% block content %}
+<div class="card card-kpi"><div class="card-body table-responsive">
+<table class="table table-striped align-middle">
+<thead><tr><th>Code</th><th>Désignation</th><th>Type</th><th>Stock</th><th>SS</th><th>PC</th><th>EOQ</th><th>Délai</th><th>ABC</th></tr></thead>
+<tbody>{% for a in articles %}
+<tr>
+<td>{{ a.code }}</td><td>{{ a.designation }}</td><td>{{ a.get_article_type_display }}</td><td>{{ a.current_stock }}</td><td>{{ a.safety_stock }}</td><td>{{ a.reorder_point }}</td><td>{{ a.eoq|floatformat:0 }}</td><td>{{ a.lead_time_days }} j</td><td><span class="badge bg-primary">{{ a.abc_class }}</span></td>
+</tr>
+{% endfor %}</tbody></table>
+</div></div>
+{% endblock %}

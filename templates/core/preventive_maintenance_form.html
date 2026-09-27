@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block page_title %}Nouvelle maintenance préventive{% endblock %}
+{% block content %}
+<form method="post" class="card card-kpi p-4">
+  {% csrf_token %}
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.machine.label_tag }} {{ form.machine }}</div>
+    <div class="col-md-6">{{ form.frequency_days.label_tag }} {{ form.frequency_days }}</div>
+  </div>
+  <div class="row mb-3">
+    <div class="col-md-6">{{ form.last_performed.label_tag }} {{ form.last_performed }}</div>
+    <div class="col-md-6">{{ form.next_due.label_tag }} {{ form.next_due }}</div>
+  </div>
+  <div class="mb-3">{{ form.description.label_tag }} {{ form.description }}</div>
+  <button type="submit" class="btn btn-primary">Enregistrer</button>
+  <a href="{% url 'preventive_maintenance_list' %}" class="btn btn-secondary">Annuler</a>
+</form>
+{% endblock %}

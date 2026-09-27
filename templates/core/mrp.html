@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block page_title %}CBN / MRP temporel{% endblock %}
+{% block content %}
+{% for article, records in mrp.items %}
+<div class="card card-kpi mb-4"><div class="card-body table-responsive">
+<h5>{{ article.code }} - {{ article.designation }}</h5>
+<div class="mb-2 text-muted">Stock {{ article.current_stock }} | SS {{ article.safety_stock }} | Délai {{ article.lead_time_days }} j | EOQ {{ article.eoq|floatformat:0 }}</div>
+<table class="table table-bordered small">
+<thead><tr><th>Semaine</th><th>Besoin brut</th><th>Réception prévue</th><th>Stock projeté</th><th>Besoin net</th><th>Réception planifiée</th><th>Lancement planifié</th></tr></thead>
+<tbody>{% for r in records %}
+<tr class="{% if r.net_requirement > 0 %}table-warning{% endif %}">
+<td>{{ r.week_start|date:'d/m/Y' }}</td><td>{{ r.gross_requirement }}</td><td>{{ r.scheduled_receipt }}</td><td>{{ r.projected_available }}</td><td>{{ r.net_requirement }}</td><td>{{ r.planned_receipt }}</td><td>{{ r.planned_release }}</td>
+</tr>
+{% endfor %}</tbody></table>
+</div></div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block page_title %}Commandes clients{% endblock %}
+{% block content %}
+<div class="d-flex gap-2 mb-3">
+  <a class="btn btn-primary" href="/orders/new/">Nouvelle commande</a>
+  <a class="btn btn-outline-primary" href="/generate-of/">Générer les OF</a>
+</div>
+<div class="card card-kpi">
+  <div class="card-body table-responsive">
+    <table class="table align-middle">
+      <thead>
+        <tr>
+          <th>Numéro</th>
+          <th>Client</th>
+          <th>Échéance</th>
+          <th>Statut</th>
+          <th>Lignes</th>
+          <th>Total</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>{{ o.number }}</td>
+          <td>{{ o.customer.name }}</td>
+          <td>{{ o.due_date }}</td>
+          <td>{{ o.get_status_display }}</td>
+          <td>
+            {% for l in o.lines.all %}
+              <div>{{ l.article.code }} x {{ l.quantity }} @ {{ l.unit_price }} Dhs {% if l.discount_percent > 0 %}(-{{ l.discount_percent }}%){% endif %}</div>
+            {% endfor %}
+          </td>
+          <td><strong>{{ o.total_amount|floatformat:2 }} Dhs</strong></td>
+          <td>
+            {% if o.status != 'CONFIRMED' %}
+              <a class="btn btn-sm btn-success" href="/orders/{{ o.id }}/confirm/">Confirmer</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
